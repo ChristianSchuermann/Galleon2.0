@@ -3,25 +3,23 @@ const router = express.Router();
 const mongoose = require("mongoose");
 
 const Expense = require("../models/Expense.model");
+const User = require("../models/User.model");
 
-//  POST /api/profile/expense  -  Creates an expense
 router.post("/expense", (req, res, next) => {
   const { title, description, expense, category } = req.body;
 
-  Expense.create({ title, description, expense, category })
+  Expense.create({ title, description, expense, category, user: { User } })
     .then((response) => res.json(response))
     .catch((err) => res.json(err));
 });
 
-//  GET /api/profile/expense -  Retrieves all expenses
 router.get("/expense", (req, res, next) => {
   Expense.find()
-    /*     .populate("user") */
+    .populate("user")
     .then((expenses) => res.json(expenses))
     .catch((err) => res.json(err));
 });
 
-//  GET /api/profile/expense:expenseID -  Retrieves a specific expense by id
 router.get("/expense/:expenseID", (req, res, next) => {
   const { expenseID } = req.params;
 
@@ -31,12 +29,10 @@ router.get("/expense/:expenseID", (req, res, next) => {
   }
 
   Expense.findById(expenseID)
-    /*   .populate("tasks") */
     .then((expense) => res.status(200).json(expense))
     .catch((error) => res.json(error));
 });
 
-// PUT  /api/profile/expense/:expenseID  -  Updates a specific expense by id
 router.put("/expense/:expenseID", (req, res, next) => {
   const { expenseID } = req.params;
 
@@ -50,7 +46,6 @@ router.put("/expense/:expenseID", (req, res, next) => {
     .catch((error) => res.json(error));
 });
 
-// DELETE  /api/expense/:expenseID  -  Deletes a specific expense by id
 router.delete("/expense/:expenseID", (req, res, next) => {
   const { expenseID } = req.params;
 

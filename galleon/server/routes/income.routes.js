@@ -3,25 +3,23 @@ const router = express.Router();
 const mongoose = require("mongoose");
 
 const Income = require("../models/Income.model");
+const User = require("../models/User.model");
 
-//  POST /api/profile/income  -  Creates an income
 router.post("/income", (req, res, next) => {
   const { title, description, income, category } = req.body;
 
-  Income.create({ title, description, income, category })
+  Income.create({ title, description, income, category, user: { User } })
     .then((response) => res.json(response))
     .catch((err) => res.json(err));
 });
 
-//  GET /api/profile/income -  Retrieves all income
 router.get("/income", (req, res, next) => {
   Income.find()
-    /*     .populate("user") */
+    .populate("user")
     .then((income) => res.json(income))
     .catch((err) => res.json(err));
 });
 
-//  GET /api/profile/income:incomeID -  Retrieves a specific income by id
 router.get("/income/:incomeID", (req, res, next) => {
   const { incomeID } = req.params;
 
@@ -29,13 +27,12 @@ router.get("/income/:incomeID", (req, res, next) => {
     res.status(400).json({ message: "Specified id is not valid" });
     return;
   }
+
   Income.findById(incomeID)
-    /*   .populate("tasks") */
     .then((income) => res.status(200).json(income))
     .catch((error) => res.json(error));
 });
 
-// PUT  /api/profile/income/:incomeID  -  Updates a specific income by id
 router.put("/income/:incomeID", (req, res, next) => {
   const { incomeID } = req.params;
 
@@ -49,7 +46,6 @@ router.put("/income/:incomeID", (req, res, next) => {
     .catch((error) => res.json(error));
 });
 
-// DELETE  /api/income/:incomeID  -  Deletes a specific income by id
 router.delete("/income/:incomeID", (req, res, next) => {
   const { incomeID } = req.params;
 
