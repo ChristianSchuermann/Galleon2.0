@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
  
  
@@ -7,8 +8,8 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  income: { type: Schema.Types.IncomeID, red: "Income" },
-  expense: { type: Schema.Types.ExpenseID, red: "Expense" },
+/*   income: { type: Schema.Types.IncomeID, red: "Income" },
+  expense: { type: Schema.Types.ExpenseID, red: "Expense" }, */
 
 
 });
