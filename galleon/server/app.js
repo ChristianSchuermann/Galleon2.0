@@ -18,6 +18,13 @@ require("./config")(app);
 // Contrary to the views version, all routes are controlled from the routes/index.js
 const allRoutes = require("./routes/index.routes");
 app.use("/api", allRoutes);
+
+const incomeRouter = require("./routes/income.routes");
+app.use("/api", incomeRouter);
+
+const expenseRouter = require("./routes/expense.routes");
+app.use("/api", expenseRouter);
+
 const authRouter = require("./routes/auth.routes");
 app.use("/auth", authRouter);
 
