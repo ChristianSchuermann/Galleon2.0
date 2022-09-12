@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 
 router.post('/signup', (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, firstName, lastName } = req.body;
   
     // All fields are mandatory
     if (email === '' || password === '' ) {
@@ -41,7 +41,7 @@ User.findOne({ email })
 
   // Create the new user in the database
  
-  return User.create({ email, password: hashedPassword,});
+  return User.create({ email, password: hashedPassword, firstName, lastName});
 })
 .then((createdUser) => {
   // Deconstruct the newly created user object to omit the password
