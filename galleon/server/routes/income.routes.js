@@ -13,22 +13,58 @@ router.post("/income", (req, res, next) => {
     .catch((err) => res.json(err));
 });
 
-//  GET /api/profile/income -  Retrieves all incomes
+//  GET /api/profile/income -  Retrieves all income
 router.get("/income", (req, res, next) => {
   Income.find()
     /*     .populate("user") */
-    .then((incomes) => res.json(incomes))
+    .then((income) => res.json(income))
     .catch((err) => res.json(err));
 });
 
-//  GET /api/profile/income/:incomeID -  Retrieves a specific income by id
+//  GET /api/profile/income:incomeID -  Retrieves a specific income by id
 router.get("/income/:incomeID", (req, res, next) => {
-  const { IncomeID } = req.params;
+  const { incomeID } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(IncomeID)) {
+  if (!mongoose.Types.ObjectId.isValid(incomeID)) {
     res.status(400).json({ message: "Specified id is not valid" });
     return;
   }
+  Income.findById(incomeID)
+    /*   .populate("tasks") */
+    .then((income) => res.status(200).json(income))
+    .catch((error) => res.json(error));
+});
+
+// PUT  /api/profile/income/:incomeID  -  Updates a specific income by id
+router.put("/income/:incomeID", (req, res, next) => {
+  const { incomeID } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(incomeID)) {
+    res.status(400).json({ message: "Specified id is not valid" });
+    return;
+  }
+
+  Income.findByIdAndUpdate(incomeID, req.body, { new: true })
+    .then((updatedIncome) => res.json(updatedIncome))
+    .catch((error) => res.json(error));
+});
+
+// DELETE  /api/income/:incomeID  -  Deletes a specific income by id
+router.delete("/income/:incomeID", (req, res, next) => {
+  const { incomeID } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(incomeID)) {
+    res.status(400).json({ message: "Specified id is not valid" });
+    return;
+  }
+
+  Income.findByIdAndRemove(incomeID)
+    .then(() =>
+      res.json({
+        message: `Expense with ${Income} is removed successfully.`,
+      })
+    )
+    .catch((error) => res.json(error));
 });
 
 module.exports = router;
