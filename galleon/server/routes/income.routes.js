@@ -1,14 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
+const { isAuthenticated } = require("../middleware/jwt.middleware");
 
 const Income = require("../models/Income.model");
 const User = require("../models/User.model");
 
-router.post("/income", (req, res, next) => {
+router.post("/income", isAuthenticated, (req, res, next) => {
   const { title, description, income, category } = req.body;
+  const {_id} = req.payload
 
-  Income.create({ title, description, income, category, user: { User } })
+  Income.create({ title, description, income, category, user: userId })
     .then((response) => res.json(response))
     .catch((err) => res.json(err));
 });
