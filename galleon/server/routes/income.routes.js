@@ -8,18 +8,21 @@ const User = require("../models/User.model");
 
 router.post("/income", isAuthenticated, (req, res, next) => {
   const { title, description, income, category } = req.body;
-  const {_id} = req.payload
+  const { _id } = req.payload;
 
-  Income.create({ title, description, income, category, user: userId })
+  Income.create({ title, description, income, category, user: _id })
     .then((response) => res.json(response))
-    .catch((err) => res.json(err));
+    .catch((err) => res.status(400).json(err)); /200/
 });
 
-router.get("/income", (req, res, next) => {
-  Income.find()
-    .populate("user")
+router.get("/income", isAuthenticated, (req, res, next) => {
+  const { _id } = req.payload;
+
+  Income.find({ user: _id })
     .then((income) => res.json(income))
-    .catch((err) => res.json(err));
+    .catch((err) => {
+      res.sendStatus(400);
+    });
 });
 
 router.get("/income/:incomeID", (req, res, next) => {
