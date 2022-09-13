@@ -53,10 +53,10 @@ router.post("/signup", (req, res) => {
     .then((createdUser) => {
       // Deconstruct the newly created user object to omit the password
       // We should never expose passwords publicly
-      const { email, _id } = createdUser;
+      const { email, _id, firstName, lastName } = createdUser;
 
       // Create a new object that doesn't expose the password
-      const user = { email, _id };
+      const user = { email, _id, firstName, lastName };
 
       // Send a json response containing the user object
       res.status(201).json({ user: user });
@@ -83,7 +83,7 @@ router.post("/login", (req, res) => {
       }
       const passwordCorrect = bcrypt.compareSync(password, foundUser.password);
       if (passwordCorrect) {
-        const { _id, email } = foundUser;
+        const { _id, email, firstName, lastName } = foundUser;
         const payload = { _id, email };
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
           algorithm: "HS256",
@@ -91,6 +91,7 @@ router.post("/login", (req, res) => {
         });
 
         res.status(200).json({ authToken: authToken });
+        console.log("Login", {_id, email, firstName, lastName, authToken, payload})
       } else {
         res.status(401).json({ message: "We cannot authenticate the user" });
       }
@@ -100,6 +101,7 @@ router.post("/login", (req, res) => {
 
 router.get("/verify", (req, res) => {
   res.status(200).json(req.payload);
+  console.log(`req.payload`, req.payload);
 });
 
 module.exports = router;

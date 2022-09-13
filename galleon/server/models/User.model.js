@@ -6,8 +6,8 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  income: [{ type: Schema.Types.ObjectId, ref: "Income" }],
-  expense: [{ type: Schema.Types.ObjectId, ref: "Expense" }],
+  income: { type: Schema.Types.ObjectId, ref: "Income" },
+  expense: { type: Schema.Types.ObjectId, ref: "Expense" },
 });
 
 module.exports = model("User", userSchema);

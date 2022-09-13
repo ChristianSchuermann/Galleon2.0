@@ -9,6 +9,14 @@ router.post("/expense", (req, res, next) => {
   const { title, description, expense, category } = req.body;
 
   Expense.create({ title, description, expense, category, user: { User } })
+    .then((newExpense) => {
+      return User.findByIdAndUpdate(
+        { User },
+        {
+          $push: { expenses: newExpense._id },
+        }
+      );
+    })
     .then((response) => res.json(response))
     .catch((err) => res.json(err));
 });
