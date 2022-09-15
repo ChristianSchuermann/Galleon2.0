@@ -50,7 +50,9 @@ router.put("/expense/:expenseID", (req, res, next) => {
     .catch((error) => res.json(error));
 });
 
-router.delete("/expense/:expenseID", (req, res, next) => {
+router.delete("/expense/:expenseID",isAuthenticated, (req, res, next) => {
+  const userId = req.payload._id;
+  console.log("testLog");
   const { expenseID } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(expenseID)) {
@@ -59,11 +61,13 @@ router.delete("/expense/:expenseID", (req, res, next) => {
   }
 
   Expense.findByIdAndRemove(expenseID)
-    .then(() =>
-      res.json({
-        message: `Expense with ${Expense} is removed successfully.`,
-      })
-    )
+    .then(() => {
+      return (
+      Expense.find({ user: userId })
+        .then((expenses) => {console.log(expenses)
+          res.json(expenses)})
+        .catch((err) => res.json(err)));
+    })
     .catch((error) => res.json(error));
 });
 
