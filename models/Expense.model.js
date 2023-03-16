@@ -11,7 +11,3 @@ const expenseSchema = new Schema({
 
 module.exports = model("Expense", expenseSchema);
 
-/* Client-Side
--> user
-user.expense --> [.........]
-map ^ => inside */
